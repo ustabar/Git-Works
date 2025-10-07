@@ -764,6 +764,327 @@ ssh -T git@github.com
 
 ---
 
+## 🔄 Undoing Changes in Git
+
+You may need to undo changes you've made in Git. Here are the most common scenarios and their solutions:
+
+### Scenario 1: Undo Both Staging and Commit
+
+**Situation:** You staged changes with `git add .` and committed with `git commit`, but you want to undo both the commit and staging.
+
+#### Solution 1: Completely Undo Commit and Staging (Keep Changes)
+
+```bash
+# Undo the last commit, keep changes in working directory
+git reset --soft HEAD~1
+
+# Files are still in staging area
+# To unstage them:
+git restore --staged .
+
+# Now files are in working directory, commit and staging are cancelled
+git status
+# Changes not staged for commit: (shown in red)
+```
+
+**Step-by-step what happened:**
+1. `git reset --soft HEAD~1` → Commit undone, files remain in staging
+2. `git restore --staged .` → Files moved from staging to working directory
+3. Changes still exist in files, you can make your corrections
+
+#### Solution 2: Undo Commit, Keep in Staging
+
+```bash
+# Only undo commit, keep files in staging
+git reset --soft HEAD~1
+
+# Files are still staged, you can commit again
+git status
+# Changes to be committed: (shown in green)
+```
+
+#### Solution 3: Completely Undo Everything (DELETE Changes)
+
+```bash
+# ⚠️ WARNING: This command permanently deletes all changes!
+git reset --hard HEAD~1
+
+# Commit undone + Staging cleared + File changes deleted
+git status
+# nothing to commit, working tree clean
+```
+
+### Scenario 2: Undo Only Staging (Without Commit)
+
+**Situation:** You ran `git add .` but haven't committed yet, and you want to unstage.
+
+```bash
+# Remove all files from staging
+git restore --staged .
+
+# Or the old command (still works):
+git reset HEAD .
+
+# To unstage a specific file:
+git restore --staged filename.txt
+
+# Check status
+git status
+# Changes not staged for commit: (in red)
+```
+
+### Scenario 3: Undo File Changes
+
+**Situation:** You modified a file but haven't run `git add` yet, and you want to cancel the changes.
+
+```bash
+# Cancel all changes (return to last commit state)
+git restore .
+
+# Or the old command:
+git checkout -- .
+
+# Cancel changes in a specific file
+git restore filename.txt
+
+# ⚠️ WARNING: These commands permanently delete changes!
+```
+
+### Scenario 4: Amend Last Commit
+
+**Situation:** You made a commit but want to change the commit message or files.
+
+```bash
+# To change commit message:
+git commit --amend -m "New commit message"
+
+# To add a forgotten file to the same commit:
+git add forgotten_file.txt
+git commit --amend --no-edit
+
+# To add file and change message:
+git add forgotten_file.txt
+git commit --amend -m "Updated commit message"
+```
+
+### Scenario 5: Undo Multiple Commits
+
+```bash
+# Undo last 3 commits (keep changes)
+git reset --soft HEAD~3
+
+# Undo last 3 commits (keep in staging)
+git reset --mixed HEAD~3
+
+# Undo last 3 commits (delete everything)
+git reset --hard HEAD~3
+
+# Return to a specific commit (with commit hash)
+git reset --soft abc1234
+```
+
+### Scenario 6: Undo Pushed Commit
+
+**Situation:** You pushed a commit to GitHub and want to undo it.
+
+#### Method 1: Revert (Recommended - Safe)
+
+```bash
+# Create a new "undo" commit
+git revert HEAD
+
+# Revert multiple commits
+git revert HEAD~3..HEAD
+
+# Push
+git push origin main
+```
+
+**Advantages:**
+- ✅ Doesn't delete history (safe)
+- ✅ No issues in team workflows
+- ✅ Audit trail preserved
+
+#### Method 2: Reset + Force Push (Risky)
+
+```bash
+# ⚠️ WARNING: Only use on your own branch!
+
+# Undo locally
+git reset --hard HEAD~1
+
+# Force push
+git push --force origin main
+# Or safer:
+git push --force-with-lease origin main
+```
+
+**Risks:**
+- ❌ Can break others' work
+- ❌ Rewrites history
+- ❌ Don't use in team workflows
+
+### Git Reset Options Comparison
+
+| Command | Commit | Staging | Working Directory | Use Case |
+|---------|--------|---------|-------------------|----------|
+| `git reset --soft HEAD~1` | ✅ Undoes | ❌ Keeps | ❌ Keeps | To fix commit |
+| `git reset --mixed HEAD~1` | ✅ Undoes | ✅ Undoes | ❌ Keeps | To clear staging too |
+| `git reset --hard HEAD~1` | ✅ Undoes | ✅ Undoes | ✅ Undoes | To delete everything (CAREFUL!) |
+
+### Practical Examples
+
+#### Example 1: "I committed the wrong file"
+
+```bash
+# Undo last commit
+git reset --soft HEAD~1
+
+# Unstage wrong file
+git restore --staged wrong_file.txt
+
+# Commit again with correct files
+git commit -m "Correct commit"
+```
+
+#### Example 2: "My commit message is wrong"
+
+```bash
+# Change commit message
+git commit --amend -m "Correct commit message"
+
+# If you already pushed:
+git push --force-with-lease origin main
+```
+
+#### Example 3: "I added too many files"
+
+```bash
+# Remove specific files from staging
+git restore --staged unnecessary_file1.txt unnecessary_file2.txt
+
+# Or remove all and select again
+git restore --staged .
+git add needed_file1.txt needed_file2.txt
+git commit -m "Only needed files"
+```
+
+#### Example 4: "I committed test code"
+
+```bash
+# Undo last commit but keep changes
+git reset --soft HEAD~1
+
+# Delete test code
+git restore test_file.txt
+
+# Commit actual code
+git add .
+git commit -m "Production code"
+```
+
+### Solution for Your Specific Scenario
+
+**Your Situation:**
+1. ✅ You ran `git add .` (staged files)
+2. ✅ You ran `git commit -m "new changes"`
+3. ❌ You noticed an error
+4. 🎯 You want to undo both commit and staging
+
+**Solution:**
+
+```bash
+# Step 1: Undo last commit (keep changes in working directory)
+git reset --soft HEAD~1
+
+# Step 2: Clear staging
+git restore --staged .
+
+# Check status
+git status
+# Now files are under "Changes not staged for commit" (red)
+
+# Step 3: Fix the error
+# Edit your files...
+
+# Step 4: Commit again with corrected version
+git add .
+git commit -m "Corrected changes"
+```
+
+### Important Warnings
+
+⚠️ **BE CAREFUL when using `git reset --hard`:**
+- Permanently deletes all your changes
+- Cannot be recovered (recoverable from reflog but complex)
+- Make a backup if unsure
+
+⚠️ **BE CAREFUL when using force push:**
+- Causes issues in team workflows
+- Can break others' work
+- Only use on your own branch
+
+✅ **Safe Methods:**
+- `git reset --soft` → Safest, keeps everything
+- `git revert` → Ideal for public branches
+- `git commit --amend` → To fix last commit
+- `git restore --staged` → Safely clears staging
+
+### Undoing Changes Flow Diagram
+
+```
+Made Changes
+    ↓
+Did You Stage? (git add)
+    ├─ NO → git restore file.txt (delete changes)
+    │
+    └─ YES → Did You Commit?
+           ├─ NO → git restore --staged . (unstage)
+           │
+           └─ YES → Did You Push?
+                  ├─ NO → git reset --soft HEAD~1 (undo commit)
+                  │
+                  └─ YES → git revert HEAD (safe)
+                         or
+                         git reset + force push (risky)
+```
+
+### Recovery
+
+If you accidentally deleted something, you can recover it with reflog:
+
+```bash
+# View history of all operations
+git reflog
+
+# Example output:
+# abc1234 HEAD@{0}: reset: moving to HEAD~1
+# def5678 HEAD@{1}: commit: new changes
+# ghi9012 HEAD@{2}: commit: previous commit
+
+# Return to a specific point
+git reset --hard HEAD@{1}
+
+# Or with commit hash:
+git reset --hard def5678
+```
+
+---
+
+## 🎯 Quick Reference: Undoing Changes
+
+| What to Undo | Command | Are Changes Preserved? |
+|--------------|---------|------------------------|
+| File changes (unstaged) | `git restore file.txt` | ❌ No |
+| Staging (git add) | `git restore --staged .` | ✅ Yes (in working directory) |
+| Last commit (soft) | `git reset --soft HEAD~1` | ✅ Yes (in staging) |
+| Last commit (mixed) | `git reset --mixed HEAD~1` | ✅ Yes (in working directory) |
+| Last commit (hard) | `git reset --hard HEAD~1` | ❌ No (everything deleted) |
+| Pushed commit | `git revert HEAD` | ✅ Yes (with new commit) |
+| Commit message | `git commit --amend -m "..."` | ✅ Yes |
+
+---
+
 ## 🎉 Success!
 
 Your Git tutorial project is now live on GitHub! Share the repository URL with others who want to learn Git.
@@ -772,8 +1093,4 @@ Your Git tutorial project is now live on GitHub! Share the repository URL with o
 
 Happy learning and teaching! 🚀
 
----
 
-**Last Updated:** October 2025
-**Version:** 1.0
-**Tutorial Count:** 14 Steps
