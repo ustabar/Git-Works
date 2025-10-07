@@ -349,7 +349,7 @@ Each Step-XX.md file is self-contained and includes:
 ### Following Along
 ```bash
 # Clone this repository
-git clone https://github.com/YOUR_USERNAME/Git-Works.git
+git clone https://github.com/ustabar/Git-Works.git
 
 # Navigate to the project
 cd Git-Works
@@ -565,7 +565,7 @@ git push -u origin main
 
 ```bash
 # Add remote repository (replace YOUR_USERNAME with your GitHub username)
-git remote add origin https://github.com/YOUR_USERNAME/Git-Works.git
+git remote add origin https://github.com/ustabar/Git-Works.git
 
 # Verify remote was added
 git remote -v
@@ -627,7 +627,7 @@ Get-Content ~/.ssh/id_ed25519.pub | Set-Clipboard
 # 4. Click "Add SSH key"
 
 # Change remote URL to SSH
-git remote set-url origin git@github.com:YOUR_USERNAME/Git-Works.git
+git remote set-url origin git@github.com:ustabar/Git-Works.git
 
 # Push using SSH
 git push -u origin main
@@ -662,7 +662,7 @@ git status
 ```
 
 **On GitHub:**
-1. Visit your repository: `https://github.com/YOUR_USERNAME/Git-Works`
+1. Visit your repository: `https://github.com/ustabar/Git-Works`
 2. Verify all files are present
 3. Check that README.md is displayed on the main page
 4. Review the commit history
@@ -712,7 +712,7 @@ git reset --hard HEAD~1
 git pull origin main
 
 # Clone this repository elsewhere
-git clone https://github.com/YOUR_USERNAME/Git-Works.git
+git clone https://github.com/ustabar/Git-Works.git
 ```
 
 ### Troubleshooting Deployment Issues
@@ -723,7 +723,7 @@ git clone https://github.com/YOUR_USERNAME/Git-Works.git
 git remote remove origin
 
 # Add correct remote
-git remote add origin https://github.com/YOUR_USERNAME/Git-Works.git
+git remote add origin https://github.com/ustabar/Git-Works.git
 ```
 
 #### Issue: "failed to push some refs"
@@ -768,7 +768,7 @@ ssh -T git@github.com
 
 Your Git tutorial project is now live on GitHub! Share the repository URL with others who want to learn Git.
 
-**Repository URL:** `https://github.com/YOUR_USERNAME/Git-Works`
+**Repository URL:** `https://github.com/ustabar/Git-Works`
 
 Happy learning and teaching! 🚀
 
