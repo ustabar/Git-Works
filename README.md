@@ -218,6 +218,8 @@ This project is designed as a complete learning resource for Git version control
 
 ### 📦 Git - The Version Control System
 
+![GIT Diagram](Diagrams/GIT.png)
+
 **Git** is a distributed version control system that runs on your local machine:
 
 - ✅ **Version Control System** - Tracks and manages code changes over time
@@ -247,6 +249,8 @@ git merge feature/user-authentication
 ```
 
 ---
+
+![GIT Diagram](Diagrams/GitHub.png)
 
 ### 🌐 GitHub - The Hosting Platform
 
@@ -1160,7 +1164,7 @@ Did You Stage? (git add)
     ├─ NO → git restore file.txt (delete changes)
     │
     └─ YES → Did You Commit?
-           ├─ NO → git restore --staged . (unstage)
+           ├─ NO → git reset HEAD . (unstage)
            │
            └─ YES → Did You Push?
                   ├─ NO → git reset --soft HEAD~1 (undo commit)
